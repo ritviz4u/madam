@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For Madam 🌸</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    width:100%;
+    height:100vh;
+    overflow:hidden;
+    font-family: Arial, sans-serif;
+    background:url('background.jpg') center center/cover no-repeat;
+}
+
+.overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.45);
+}
+
+.container{
+    position:relative;
+    z-index:10;
+    width:100%;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    padding:25px;
+}
+
+.message{
+    color:white;
+    font-size:1.35rem;
+    font-weight:500;
+    line-height:1.8;
+    text-shadow:0 2px 8px rgba(0,0,0,0.5);
+    max-width:800px;
+    opacity:0;
+    transition:opacity 2s ease;
+}
+
+.show{
+    opacity:1;
+}
+
+.startScreen{
+    position:fixed;
+    inset:0;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    z-index:20;
+    background:rgba(0,0,0,0.55);
+}
+
+.startScreen h1{
+    color:white;
+    margin-bottom:20px;
+    text-align:center;
+    padding:0 20px;
+}
+
+.startBtn{
+    padding:14px 32px;
+    border:none;
+    border-radius:40px;
+    background:white;
+    font-size:1rem;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.floating{
+    position:absolute;
+    font-size:28px;
+    opacity:0.9;
+    animation:floatUp linear forwards;
+}
+
+@keyframes floatUp{
+    from{
+        transform:translateY(110vh);
+        opacity:0;
+    }
+
+    15%{
+        opacity:1;
+    }
+
+    to{
+        transform:translateY(-120px);
+        opacity:0;
+    }
+}
+
+#blackFade{
+    position:fixed;
+    inset:0;
+    background:black;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity 8s ease;
+    z-index:100;
+}
+
+@media(max-width:768px){
+
+    .message{
+        font-size:1.15rem;
+    }
+
+    .startScreen h1{
+        font-size:1.5rem;
+    }
+
+    .floating{
+        font-size:22px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="overlay"></div>
+<div id="blackFade"></div>
+
+<audio id="bgMusic" src="music.mp3"></audio>
+
+<div id="floatingContainer"></div>
+
+<div class="startScreen" id="startScreen">
+    <h1>🌸 A Small Message For Madam ❤️</h1>
+    <button class="startBtn" onclick="startExperience()">Start 🌷</button>
+</div>
+
+<div class="container">
+    <div class="message" id="message"></div>
+</div>
+
+<script>
+
+const messages = [
+
+`🌸 Hi Madam...`,
+
+`🌙 I know today hasn't been the easiest day for you.`,
+
+`🥀 I don't know exactly what's on your mind right now...<br><br>and honestly, you don't have to explain everything.`,
+
+`🧸 Sometimes even the strongest people get tired.`,
+
+`❤️ Sometimes the people who make everyone smile need a reason to smile too.`,
+
+`🌹 So before anything else...<br><br>I just wanted to remind you of something important.`,
+
+`✨ You matter.`,
+
+`💐 More than you realize.`,
+
+`🧿 Your feelings matter.`,
+
+`🌸 Your presence matters.`,
+
+`❤️ And even on days when everything feels heavy...<br><br>you still matter.`,
+
+`🌷 Whatever is bothering you today...<br><br>I hope it becomes lighter with time.`,
+
+`✨ I hope tomorrow is a little kinder to you than today was.`,
+
+`🧸 You don't have to be strong every single moment.`,
+
+`🌹 It's okay to rest.`,
+
+`💖 It's okay to feel things.`,
+
+`🌙 It's okay to have a bad day.`,
+
+`❤️ This page won't magically solve everything...<br><br>but if it made you smile even for a few seconds...<br><br>then it has done its job.`,
+
+`🌸 Madam...<br><br>Take care of yourself.<br><br>The world is a little better because you're in it. ❤️`
+];
+
+let current = 0;
+
+const messageEl = document.getElementById("message");
+const music = document.getElementById("bgMusic");
+
+function startExperience(){
+
+    document.getElementById("startScreen").style.display = "none";
+
+    music.volume = 1;
+
+    music.play().catch(()=>{});
+
+    showMessage();
+
+    setInterval(createEmoji,1000);
+}
+
+function showMessage(){
+
+    if(current >= messages.length){
+
+        fadeOutMusic();
+        return;
+    }
+
+    messageEl.classList.remove("show");
+
+    setTimeout(()=>{
+
+        messageEl.innerHTML = messages[current];
+
+        messageEl.classList.add("show");
+
+        current++;
+
+    },1000);
+
+    setTimeout(showMessage,5500);
+}
+
+function createEmoji(){
+
+    const emojis = [
+        "❤️",
+        "🧸",
+        "🌹",
+        "💐",
+        "🧿",
+        "✨",
+        "🌸",
+        "💖"
+    ];
+
+    const emoji = document.createElement("div");
+
+    emoji.className = "floating";
+
+    emoji.innerHTML =
+        emojis[Math.floor(Math.random()*emojis.length)];
+
+    emoji.style.left = Math.random()*100 + "vw";
+
+    emoji.style.animationDuration =
+        (12 + Math.random()*8) + "s";
+
+    document.getElementById("floatingContainer")
+        .appendChild(emoji);
+
+    setTimeout(()=>{
+        emoji.remove();
+    },20000);
+}
+
+function fadeOutMusic(){
+
+    document.getElementById("blackFade").style.opacity = "1";
+
+    let fade = setInterval(()=>{
+
+        if(music.volume > 0.01){
+
+            music.volume -= 0.01;
+
+        }else{
+
+            music.pause();
+
+            clearInterval(fade);
+        }
+
+    },120);
+}
+
+</script>
+
+</body>
+</html>
